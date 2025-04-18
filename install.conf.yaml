@@ -10,6 +10,7 @@
 
 - link:
     ~/.config/nvim/: ./home/.config/nvim/
+    ~/.config/tmuxinator/: ./home/.config/tmuxinator/
     ~/Library/Fonts/Firacode/: ./home/Library/Fonts/FiraCode/
     ~/Library/Fonts/ProggyClean/: ./home/Library/Fonts/ProggyClean/
     ~/.gitconfig: ./home/.gitconfig
