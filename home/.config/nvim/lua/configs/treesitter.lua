@@ -22,6 +22,8 @@ local options = {
     "jsdoc",
     "json",
     "lua",
+    "markdown",
+    "markdown_inline",
     "python",
     "regex",
     "ruby",
@@ -30,8 +32,8 @@ local options = {
     "sql",
     "tmux",
     "vim",
-    "vimdoc"
-  }
+    "vimdoc",
+  },
 }
 
 return options
