@@ -1,7 +1,7 @@
 return {
   {
     "stevearc/conform.nvim",
-    event = 'BufWritePre', -- uncomment for format on save
+    event = "BufWritePre",
     opts = require "configs.conform",
   },
 
@@ -12,8 +12,8 @@ return {
     end,
   },
   {
-  	"nvim-treesitter/nvim-treesitter",
-    opts = require "configs.treesitter"
+    "nvim-treesitter/nvim-treesitter",
+    opts = require "configs.treesitter",
   },
   {
     "unblevable/quick-scope",
