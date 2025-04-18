@@ -1,0 +1,12 @@
+---
+name: dotfiles
+project_root: "/Users/angeljuarez/.dotfiles"
+windows:
+- neovim:
+    layout: 915d,270x132,0,0,0
+    panes:
+    - cd /Users/angeljuarez/.dotfiles
+- terminal:
+    layout: 915e,270x132,0,0,1
+    panes:
+    - cd /Users/angeljuarez/.dotfiles
