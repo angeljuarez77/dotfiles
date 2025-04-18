@@ -1,0 +1,20 @@
+- defaults:
+    link:
+      create: true
+      relink: true
+
+- clean: ['~']
+
+- create:
+    - ~/Repositories
+
+- link:
+    ~/.config/nvim/: ./home/.config/nvim/
+    ~/Library/Fonts/Firacode/: ./home/Library/Fonts/FiraCode/
+    ~/Library/Fonts/ProggyClean/: ./home/Library/Fonts/ProggyClean/
+    ~/.gitconfig: ./home/.gitconfig
+    ~/.tmux.conf: ./home/.tmux.conf
+    ~/.zshrc: ./home/.zshrc
+
+- shell:
+  - [git submodule update --init --recursive, Installing submodules]
