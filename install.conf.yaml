@@ -15,6 +15,7 @@
     ~/.gitconfig: ./home/.gitconfig
     ~/.tmux.conf: ./home/.tmux.conf
     ~/.zshrc: ./home/.zshrc
+    ~/Brewfile: ./home/Brewfile
 
 - shell:
   - [git submodule update --init --recursive, Installing submodules]
