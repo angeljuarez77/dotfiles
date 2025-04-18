@@ -13,6 +13,7 @@
     ~/Library/Fonts/Firacode/: ./home/Library/Fonts/FiraCode/
     ~/Library/Fonts/ProggyClean/: ./home/Library/Fonts/ProggyClean/
     ~/.gitconfig: ./home/.gitconfig
+    ~/.nvmrc: ./home/.nvmrc
     ~/.tmux.conf: ./home/.tmux.conf
     ~/.zshrc: ./home/.zshrc
     ~/Brewfile: ./home/Brewfile
