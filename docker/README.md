@@ -31,6 +31,8 @@ dnvim src/app.ts         # mounts git root (or file's directory) as workspace
 
 No first-run downloads — ready immediately after `docker pull`.
 
+CI pushes `angeljuarez77/dnvim:latest` to Docker Hub on every merge to `main` (see `.github/workflows/dnvim.yml`).
+
 ## Build locally
 
 ```bash
