@@ -13,7 +13,44 @@ Works on **Linux**, **macOS**, and **Windows** (via Docker Desktop).
 | Requirement | Notes |
 |-------------|-------|
 | [Docker](https://docs.docker.com/get-docker/) | Docker Desktop (macOS/Windows) or Docker Engine (Linux) |
+| **Nerd Font on your terminal** | Required for icons (see [Terminal font](#terminal-font-required)) |
 | Git | Optional — detects your project root when opening files |
+
+---
+
+## Terminal font (required)
+
+NvChad uses **Nerd Font icons** in the statusline, nvim-tree, and plugins. If you see **boxes with question marks** (`□`), your **host terminal** is not using a Nerd Font.
+
+Fonts installed inside the Docker image do **not** affect your display — only the font configured in iTerm2, Terminal, Cursor, Windows Terminal, etc.
+
+### Quick fix (macOS / Linux)
+
+From this repo:
+
+```bash
+./bin/install-nerd-font
+```
+
+Or if you use dotbot:
+
+```bash
+./install   # links FiraCode Nerd Font to ~/Library/Fonts
+```
+
+Then set your terminal font to **`FiraCode Nerd Font`** (not plain "Fira Code"):
+
+| App | Where to set it |
+|-----|-----------------|
+| **iTerm2** | Settings → Profiles → Text → Font |
+| **Terminal.app** | Settings → Profile → Font |
+| **Cursor / VS Code** | Settings → `terminal.integrated.fontFamily` → `FiraCode Nerd Font` |
+| **Windows Terminal** | Settings → Profiles → Appearance → Font face |
+| **Alacritty / Kitty** | `font.normal.family` in config |
+
+Restart the terminal after changing the font.
+
+Run `dnvim-doctor` to verify your setup.
 
 ---
 
@@ -164,7 +201,7 @@ Everything is pre-installed at build time — no downloads on first launch.
 - Formatters: Prettier, Stylua
 - Treesitter parsers
 - Node.js 22, global ESLint + Prettier
-- FiraCode Nerd Font
+- FiraCode Nerd Font (inside the image — **your terminal still needs a Nerd Font**; see above)
 
 ---
 
@@ -197,6 +234,18 @@ Confirm you are using `dnvim` (not a raw `docker run` without `PUID`/`PGID`).
 ### Windows path / drive errors
 
 Run `dnvim` from PowerShell or Git Bash with Docker Desktop running. Paths like `C:\Users\you\project` are mounted automatically.
+
+### Icons show as boxes / question marks
+
+Your **terminal** needs a Nerd Font — not the container. See [Terminal font](#terminal-font-required).
+
+```bash
+# macOS / Linux
+./bin/install-nerd-font
+dnvim-doctor
+```
+
+On Windows, install [FiraCode Nerd Font](https://github.com/ryanoasis/nerd-fonts/releases/download/v3.3.0/FiraCode.zip), install the `.ttf` files, then set **Windows Terminal** font to `FiraCode Nerd Font`.
 
 ---
 

@@ -1,0 +1,82 @@
+#!/usr/bin/env bash
+# Quick checks for dnvim setup
+set -euo pipefail
+
+IMAGE="${DNVIM_IMAGE:-angeljuarez77/dnvim:latest}"
+ok=0
+warn=0
+
+pass() { echo "  ok   $*"; ok=$((ok + 1)); }
+fail() { echo "  FAIL $*"; warn=$((warn + 1)); }
+hint() { echo "       $*"; }
+
+echo "dnvim doctor"
+echo ""
+
+echo "Docker"
+if command -v docker &>/dev/null; then
+  pass "docker found: $(docker --version)"
+else
+  fail "docker not found"
+fi
+
+if docker info &>/dev/null; then
+  pass "docker daemon is running"
+else
+  fail "docker daemon not running"
+fi
+
+echo ""
+echo "Image"
+if docker image inspect "${IMAGE}" &>/dev/null; then
+  pass "local image: ${IMAGE}"
+  docker image inspect "${IMAGE}" --format '       {{.Os}}/{{.Architecture}}' 2>/dev/null || true
+else
+  hint "image not local yet — run: docker pull ${IMAGE}"
+fi
+
+echo ""
+echo "Launcher"
+if command -v dnvim &>/dev/null; then
+  pass "dnvim on PATH: $(command -v dnvim)"
+else
+  fail "dnvim not on PATH"
+fi
+
+echo ""
+echo "Terminal font (icons)"
+case "$(uname -s)" in
+  Darwin)
+  if ls "${HOME}/Library/Fonts/FiraCode/"*Nerd*.ttf &>/dev/null 2>&1 || \
+     ls "${HOME}/Library/Fonts/Firacode/"*Nerd*.ttf &>/dev/null 2>&1; then
+    pass "FiraCode Nerd Font files found in ~/Library/Fonts"
+  else
+    fail "FiraCode Nerd Font not installed on macOS"
+    hint "run: install-nerd-font   (or ./install from this dotfiles repo)"
+  fi
+  hint "Set terminal font to 'FiraCode Nerd Font' (not plain Fira Code)"
+  hint "Cursor: Settings → Terminal › Integrated: Font Family"
+  ;;
+  Linux)
+  if fc-list 2>/dev/null | grep -qi 'FiraCode Nerd Font'; then
+    pass "FiraCode Nerd Font registered with fontconfig"
+  else
+    fail "FiraCode Nerd Font not found — run: install-nerd-font"
+  fi
+  ;;
+  MINGW*|MSYS*|CYGWIN*)
+  hint "Install 'FiraCode Nerd Font' on Windows and set it in Windows Terminal"
+  ;;
+  *)
+  hint "Install a Nerd Font on your host terminal — see SETUP.md#terminal-font"
+  ;;
+esac
+
+hint "Icons render in YOUR terminal font; fonts inside the container do not apply."
+
+echo ""
+if [[ "${warn}" -eq 0 ]]; then
+  echo "All checks passed."
+else
+  echo "${warn} issue(s) found."
+fi
