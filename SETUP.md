@@ -165,6 +165,14 @@ The launcher passes your UID/GID automatically. If files are still owned by root
 
 The image includes Neovim, all plugins, LSP servers, and fonts. The initial pull is a one-time download (~1–2 GB depending on layers).
 
+### `no matching manifest for linux/arm64` (Apple Silicon)
+
+The image is published for **linux/amd64** and **linux/arm64**. If you see this error, pull again after the latest CI build finishes, or use the image you built locally on your Mac:
+
+```bash
+docker build -f docker/Dockerfile -t angeljuarez77/dnvim:latest .
+```
+
 ---
 
 ## Building the image yourself
