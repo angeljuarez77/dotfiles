@@ -6,6 +6,9 @@ on:
     paths:
       - ".dockerignore"
       - ".github/workflows/dnvim.yml"
+      - "bin/dnvim"
+      - "bin/dnvim.ps1"
+      - "bin/dnvim.cmd"
       - "docker/**"
       - "home/.config/nvim/**"
   workflow_dispatch:

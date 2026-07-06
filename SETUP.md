@@ -2,7 +2,9 @@
 
 Portable Neovim (NvChad) in Docker. Install once on any machine, then run `dnvim <file>`.
 
-**Docker image:** [`angeljuarez77/dnvim`](https://hub.docker.com/r/angeljuarez77/dnvim)
+Works on **Linux**, **macOS**, and **Windows** (via Docker Desktop).
+
+**Docker image:** [`angeljuarez77/dnvim`](https://hub.docker.com/r/angeljuarez77/dnvim) — `linux/amd64` + `linux/arm64`
 
 ---
 
@@ -11,25 +13,15 @@ Portable Neovim (NvChad) in Docker. Install once on any machine, then run `dnvim
 | Requirement | Notes |
 |-------------|-------|
 | [Docker](https://docs.docker.com/get-docker/) | Docker Desktop (macOS/Windows) or Docker Engine (Linux) |
-| Python 3 | Used by the `dnvim` launcher to resolve file paths (`python3` on PATH) |
-| Git | Optional — used to detect your project root when opening files |
+| Git | Optional — detects your project root when opening files |
 
 ---
 
-## One-time setup (new machine)
+## macOS
 
-### 1. Install Docker
+### 1. Install [Docker Desktop](https://docs.docker.com/desktop/setup/install/mac-install/)
 
-- **macOS / Windows:** [Docker Desktop](https://docs.docker.com/desktop/)
-- **Linux:** [Docker Engine](https://docs.docker.com/engine/install/)
-
-Verify:
-
-```bash
-docker --version
-```
-
-### 2. Install the `dnvim` launcher
+### 2. Install the launcher
 
 ```bash
 mkdir -p ~/.local/bin
@@ -38,74 +30,118 @@ curl -fsSL https://raw.githubusercontent.com/angeljuarez77/dotfiles/main/bin/dnv
 chmod +x ~/.local/bin/dnvim
 ```
 
-### 3. Add `~/.local/bin` to your PATH
-
-**zsh** (`~/.zshrc`):
+Add to `~/.zshrc` (or `~/.bashrc`):
 
 ```bash
 export PATH="$HOME/.local/bin:$PATH"
 ```
 
-**bash** (`~/.bashrc`):
-
-```bash
-export PATH="$HOME/.local/bin:$PATH"
-```
-
-Reload your shell:
-
-```bash
-source ~/.zshrc   # or source ~/.bashrc
-```
-
-### 4. Pull the image
+### 3. Pull and run
 
 ```bash
 docker pull angeljuarez77/dnvim:latest
+dnvim README.md
 ```
 
-### 5. Verify
-
-```bash
-command -v dnvim
-docker run --rm --entrypoint nvim angeljuarez77/dnvim:latest --version
-```
-
-You should see `NVIM v0.12.x` printed.
+**Apple Silicon (M1/M2/M3):** the image includes an `arm64` build. **Intel Macs** use `amd64`.
 
 ---
 
-## Usage
+## Linux
+
+### 1. Install [Docker Engine](https://docs.docker.com/engine/install/)
+
+Add your user to the `docker` group so `sudo` isn't required:
+
+```bash
+sudo usermod -aG docker "$USER"
+newgrp docker
+```
+
+### 2. Install the launcher
+
+```bash
+mkdir -p ~/.local/bin
+curl -fsSL https://raw.githubusercontent.com/angeljuarez77/dotfiles/main/bin/dnvim \
+  -o ~/.local/bin/dnvim
+chmod +x ~/.local/bin/dnvim
+```
+
+Add to `~/.bashrc` or `~/.zshrc`:
+
+```bash
+export PATH="$HOME/.local/bin:$PATH"
+```
+
+### 3. Pull and run
+
+```bash
+docker pull angeljuarez77/dnvim:latest
+dnvim README.md
+```
+
+The launcher passes your UID/GID so files created in the container keep correct ownership.
+
+---
+
+## Windows
+
+Docker Desktop runs Linux containers, so the same image is used on all platforms.
+
+### 1. Install [Docker Desktop](https://docs.docker.com/desktop/setup/install/windows-install/)
+
+Enable **WSL 2** backend when prompted (recommended).
+
+### 2. Install the launcher (PowerShell)
+
+```powershell
+New-Item -ItemType Directory -Force -Path "$env:USERPROFILE\bin" | Out-Null
+Invoke-WebRequest -Uri "https://raw.githubusercontent.com/angeljuarez77/dotfiles/main/bin/dnvim.ps1" `
+  -OutFile "$env:USERPROFILE\bin\dnvim.ps1"
+Invoke-WebRequest -Uri "https://raw.githubusercontent.com/angeljuarez77/dotfiles/main/bin/dnvim.cmd" `
+  -OutFile "$env:USERPROFILE\bin\dnvim.cmd"
+```
+
+Add `%USERPROFILE%\bin` to your [user PATH](https://learn.microsoft.com/en-us/windows/win32/procthread/environment-variables).
+
+Open a **new** terminal, then:
+
+```powershell
+docker pull angeljuarez77/dnvim:latest
+dnvim README.md
+```
+
+### Alternative: Git Bash or WSL
+
+If you use **Git Bash** or **WSL**, install the bash launcher instead (same as Linux/macOS) and run `dnvim` from that shell.
+
+---
+
+## Usage (all platforms)
 
 ```bash
 dnvim                         # open nvim in the current directory
 dnvim README.md               # open a file
 dnvim src/components/App.tsx  # open a file anywhere in a git repo
-dnvim .                       # open nvim with the current directory as workspace
 ```
 
 ### What happens under the hood
 
-1. `dnvim` finds your **git project root** (or the file's parent directory if not in a repo).
+1. `dnvim` finds your **git project root** (or the file's parent directory).
 2. That directory is mounted into the container at `/workspace`.
-3. Neovim opens your file with **nvim-tree** showing the full project tree.
-4. Your host **UID/GID** are passed in so new files keep correct ownership.
+3. Neovim opens your file with **nvim-tree** showing the project tree.
+4. On Linux/macOS, your **UID/GID** are passed through for correct file ownership.
 
 ---
 
-## Setup from this dotfiles repo
-
-If you already have this repository cloned:
+## Setup from this dotfiles repo (macOS / Linux)
 
 ```bash
 ./install
-```
-
-That symlinks `bin/dnvim` to `~/.local/bin/dnvim` (see `install.conf.yaml`). Then pull the image:
-
-```bash
 docker pull angeljuarez77/dnvim:latest
 ```
+
+This symlinks `bin/dnvim` to `~/.local/bin/dnvim`.
 
 ---
 
@@ -114,13 +150,7 @@ docker pull angeljuarez77/dnvim:latest
 | Variable | Default | Description |
 |----------|---------|-------------|
 | `DNVIM_IMAGE` | `angeljuarez77/dnvim:latest` | Override the Docker image |
-| `PUID` / `PGID` | auto (`id -u` / `id -g`) | Set automatically by the launcher |
-
-Example — pin a specific version:
-
-```bash
-export DNVIM_IMAGE=angeljuarez77/dnvim:0.2.0
-```
+| `PUID` / `PGID` | auto on Unix; `1000` on Windows | Container user mapping |
 
 ---
 
@@ -142,59 +172,46 @@ Everything is pre-installed at build time — no downloads on first launch.
 
 ### `dnvim: command not found`
 
-`~/.local/bin` is not on your PATH. Add it (step 3 above) and reload your shell.
+The launcher directory is not on your PATH. Revisit the install step for your OS.
 
 ### `Cannot connect to the Docker daemon`
 
-Docker is not running. Start Docker Desktop or the Docker service:
+Docker is not running. Start Docker Desktop, or on Linux:
 
 ```bash
-# Linux
 sudo systemctl start docker
 ```
 
-### `python3: command not found`
+### `no matching manifest for linux/arm64`
 
-Install Python 3. The launcher uses it to resolve absolute file paths.
-
-### Permission errors on saved files
-
-The launcher passes your UID/GID automatically. If files are still owned by root, confirm you are running `dnvim` (not `docker run` directly without `-e PUID` / `-e PGID`).
-
-### Slow first `docker pull`
-
-The image includes Neovim, all plugins, LSP servers, and fonts. The initial pull is a one-time download (~1–2 GB depending on layers).
-
-### `no matching manifest for linux/arm64` (Apple Silicon)
-
-The image is published for **linux/amd64** and **linux/arm64**. If you see this error, pull again after the latest CI build finishes, or use the image you built locally on your Mac:
+Pull again after the latest CI build finishes (image is multi-arch). Or build locally:
 
 ```bash
 docker build -f docker/Dockerfile -t angeljuarez77/dnvim:latest .
 ```
+
+### Permission errors on saved files (Linux)
+
+Confirm you are using `dnvim` (not a raw `docker run` without `PUID`/`PGID`).
+
+### Windows path / drive errors
+
+Run `dnvim` from PowerShell or Git Bash with Docker Desktop running. Paths like `C:\Users\you\project` are mounted automatically.
 
 ---
 
 ## Building the image yourself
 
-From this repository:
-
 ```bash
 docker build -f docker/Dockerfile -t angeljuarez77/dnvim:latest .
-export DNVIM_IMAGE=angeljuarez77/dnvim:latest
 ```
 
-See also [`docker/README.md`](docker/README.md) for compose and local development options.
+See [`docker/README.md`](docker/README.md) for compose and local development.
 
 ---
 
 ## CI (maintainers)
 
-Pushes to `main` that touch the Docker image or Neovim config trigger [`.github/workflows/dnvim.yml`](.github/workflows/dnvim.yml), which rebuilds and pushes `angeljuarez77/dnvim:latest` to Docker Hub.
+Pushes to `main` that touch the Docker image or Neovim config trigger [`.github/workflows/dnvim.yml`](.github/workflows/dnvim.yml), which builds **linux/amd64** and **linux/arm64** and pushes `angeljuarez77/dnvim:latest`.
 
-Add these [repository secrets](https://github.com/angeljuarez77/dotfiles/settings/secrets/actions):
-
-| Secret | Value |
-|--------|-------|
-| `DOCKERHUB_USERNAME` | `angeljuarez77` |
-| `DOCKERHUB_TOKEN` | A Docker Hub [access token](https://hub.docker.com/settings/security) |
+Repository secrets: `DOCKERHUB_USERNAME`, `DOCKERHUB_TOKEN` ([Docker Hub access token](https://hub.docker.com/settings/security)).

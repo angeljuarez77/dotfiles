@@ -4,7 +4,15 @@ Portable Neovim (NvChad) in Docker.
 
 **Image:** [`angeljuarez77/dnvim`](https://hub.docker.com/r/angeljuarez77/dnvim)
 
-> **Setting up on a new machine?** See **[SETUP.md](../SETUP.md)** for step-by-step instructions.
+## Platform support
+
+| Platform | Launcher | Docker image |
+|----------|----------|--------------|
+| Linux (x86_64, arm64) | `bin/dnvim` | `linux/amd64` or `linux/arm64` |
+| macOS (Intel, Apple Silicon) | `bin/dnvim` | `linux/amd64` or `linux/arm64` |
+| Windows | `bin/dnvim.cmd` / `bin/dnvim.ps1` | `linux/amd64` (via Docker Desktop) |
+
+See **[SETUP.md](../SETUP.md)** for per-OS install instructions.
 
 ## Quick usage
 
