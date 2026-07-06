@@ -1,11 +1,9 @@
 -- load defaults i.e lua_lsp
 require("nvchad.configs.lspconfig").defaults()
 
-local lspconfig = require "lspconfig"
+local M = {}
 
-local nvlsp = require "nvchad.configs.lspconfig"
-
-local servers = {
+M.servers = {
   bashls = {},
   cssls = {},
   eslint = {},
@@ -15,20 +13,13 @@ local servers = {
     settings = {
       Lua = {
         diagnostics = {
-          globals = { "vim" }
-        }
-      }
-    }
+          globals = { "vim" },
+        },
+      },
+    },
   },
   ts_ls = {},
   typos_lsp = {},
 }
 
-for lsp, opts in ipairs(servers) do
-  lspconfig[lsp].setup {
-    on_attach = nvlsp.on_attach,
-    on_init = nvlsp.on_init,
-    capabilities = nvlsp.capabilities,
-    opts,
-  }
-end
+return M

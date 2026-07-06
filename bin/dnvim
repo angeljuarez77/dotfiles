@@ -1,0 +1,69 @@
+#!/usr/bin/env bash
+# dnvim — portable Neovim via Docker
+# Usage: dnvim [file...]
+set -euo pipefail
+
+IMAGE="${DNVIM_IMAGE:-angeljuarez77/dnvim:latest}"
+
+abspath() {
+  python3 -c 'import os, sys; print(os.path.realpath(os.path.expanduser(sys.argv[1])))' "$1"
+}
+
+find_workspace() {
+  local dir="$1"
+  if git -C "$dir" rev-parse --show-toplevel &>/dev/null; then
+    git -C "$dir" rev-parse --show-toplevel
+  else
+    echo "$dir"
+  fi
+}
+
+# Resolve workspace mount and file paths passed to nvim
+WORKSPACE=""
+NVIM_ARGS=()
+
+if [[ $# -eq 0 ]]; then
+  WORKSPACE="$(pwd)"
+else
+  first="$1"
+  if [[ "$first" == -* ]] || [[ "$first" == +* ]]; then
+  # nvim flags (e.g. dnvim -c 'qa!')
+    WORKSPACE="$(pwd)"
+    NVIM_ARGS=("$@")
+  elif [[ -e "$first" ]] || [[ -f "$first" ]] || [[ -d "$first" ]]; then
+    local_abs="$(abspath "$first")"
+    if [[ -d "$local_abs" ]]; then
+      WORKSPACE="$(find_workspace "$local_abs")"
+      rel="${local_abs#"$WORKSPACE"/}"
+      [[ "$rel" == "$local_abs" ]] && rel="."
+      NVIM_ARGS=("$rel" "${@:2}")
+    else
+      WORKSPACE="$(find_workspace "$(dirname "$local_abs")")"
+      rel="${local_abs#"$WORKSPACE"/}"
+      [[ "$rel" == "$local_abs" ]] && rel="$(basename "$local_abs")"
+      NVIM_ARGS=("$rel" "${@:2}")
+    fi
+  else
+    # New or non-existent file — mount parent dir so nvim-tree can explore
+    parent="$(abspath "$(dirname "$first")")"
+    WORKSPACE="$(find_workspace "$parent")"
+    rel="${parent#"$WORKSPACE"/}"
+    if [[ "$rel" != "$parent" ]]; then
+      NVIM_ARGS=("${rel}/$(basename "$first")" "${@:2}")
+    else
+      NVIM_ARGS=("$(basename "$first")" "${@:2}")
+    fi
+  fi
+fi
+
+WORKSPACE="$(abspath "$WORKSPACE")"
+
+exec docker run --rm -it \
+  --pull missing \
+  -e PUID="$(id -u)" \
+  -e PGID="$(id -g)" \
+  -e DNVIM_CONTAINER=1 \
+  -v "${WORKSPACE}:/workspace" \
+  -w /workspace \
+  "${IMAGE}" \
+  nvim "${NVIM_ARGS[@]}"

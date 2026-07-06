@@ -1,0 +1,16 @@
+services:
+  dnvim:
+    image: angeljuarez77/dnvim:latest
+    build:
+      context: ..
+      dockerfile: docker/Dockerfile
+    container_name: dnvim
+    stdin_open: true
+    tty: true
+    working_dir: /workspace
+    volumes:
+      - ..:/workspace
+    environment:
+      - PUID=${PUID:-1000}
+      - PGID=${PGID:-1000}
+      - DNVIM_CONTAINER=1

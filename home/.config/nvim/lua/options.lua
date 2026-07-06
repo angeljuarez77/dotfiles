@@ -4,5 +4,10 @@ require "nvchad.options"
 
 local o = vim.o
 o.rnu = true
-o.clipboard = "unnamed"
+
+if vim.env.DNVIM_CONTAINER then
+  o.clipboard = ""
+else
+  o.clipboard = "unnamedplus"
+end
 -- o.cursorlineopt ='both' -- to enable cursorline!

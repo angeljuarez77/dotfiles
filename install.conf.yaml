@@ -7,8 +7,10 @@
 
 - create:
     - ~/Repositories
+    - ~/.local/bin
 
 - link:
+    ~/.local/bin/dnvim: ./bin/dnvim
     ~/.config/nvim/: ./home/.config/nvim/
     ~/.config/tmuxinator/: ./home/.config/tmuxinator/
     ~/Library/Fonts/Firacode/: ./home/Library/Fonts/FiraCode/

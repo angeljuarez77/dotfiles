@@ -1,0 +1,13 @@
+.git
+.gitmodules
+dotbot
+home/Library
+home/.zshrc
+home/.gitconfig
+home/.tmux.conf
+home/Brewfile
+home/.nvmrc
+home/.config/tmuxinator
+install
+install.conf.yaml
+README.md
