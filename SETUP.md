@@ -26,17 +26,14 @@ Fonts installed inside the Docker image do **not** affect your display — only 
 
 ### Quick fix (macOS / Linux)
 
-From this repo:
+From this repo, dotbot links FiraCode Nerd Font into your user font directory:
 
 ```bash
-./bin/install-nerd-font
+./install
 ```
 
-Or if you use dotbot:
-
-```bash
-./install   # links FiraCode Nerd Font to ~/Library/Fonts
-```
+macOS: `~/Library/Fonts/FiraCode/`  
+Linux: `~/.local/share/fonts/FiraCode/` (runs `fc-cache` automatically)
 
 Then set your terminal font to **`FiraCode Nerd Font`** (not plain "Fira Code"):
 
@@ -240,8 +237,7 @@ Run `dnvim` from PowerShell or Git Bash with Docker Desktop running. Paths like 
 Your **terminal** needs a Nerd Font — not the container. See [Terminal font](#terminal-font-required).
 
 ```bash
-# macOS / Linux
-./bin/install-nerd-font
+./install        # links fonts via dotbot (from this repo)
 dnvim-doctor
 ```
 

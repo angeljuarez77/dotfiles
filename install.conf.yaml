@@ -8,12 +8,14 @@
 - create:
     - ~/Repositories
     - ~/.local/bin
+    - ~/.local/share/fonts/FiraCode
 
 - link:
     ~/.local/bin/dnvim: ./bin/dnvim
     ~/.config/nvim/: ./home/.config/nvim/
     ~/.config/tmuxinator/: ./home/.config/tmuxinator/
-    ~/Library/Fonts/Firacode/: ./home/Library/Fonts/FiraCode/
+    ~/Library/Fonts/FiraCode/: ./home/Library/Fonts/FiraCode/
+    ~/.local/share/fonts/FiraCode/: ./home/Library/Fonts/FiraCode/
     ~/Library/Fonts/ProggyClean/: ./home/Library/Fonts/ProggyClean/
     ~/.gitconfig: ./home/.gitconfig
     ~/.nvmrc: ./home/.nvmrc
@@ -23,3 +25,4 @@
 
 - shell:
   - [git submodule update --init --recursive, Installing submodules]
+  - ['if [ "$(uname -s)" = Linux ] && command -v fc-cache >/dev/null; then fc-cache -fv "$HOME/.local/share/fonts/FiraCode"; fi', Refreshing font cache]

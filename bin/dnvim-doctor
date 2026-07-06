@@ -47,12 +47,11 @@ echo ""
 echo "Terminal font (icons)"
 case "$(uname -s)" in
   Darwin)
-  if ls "${HOME}/Library/Fonts/FiraCode/"*Nerd*.ttf &>/dev/null 2>&1 || \
-     ls "${HOME}/Library/Fonts/Firacode/"*Nerd*.ttf &>/dev/null 2>&1; then
+  if ls "${HOME}/Library/Fonts/FiraCode/"*Nerd*.ttf &>/dev/null 2>&1; then
     pass "FiraCode Nerd Font files found in ~/Library/Fonts"
   else
     fail "FiraCode Nerd Font not installed on macOS"
-    hint "run: install-nerd-font   (or ./install from this dotfiles repo)"
+    hint "run: ./install   (from this dotfiles repo)"
   fi
   hint "Set terminal font to 'FiraCode Nerd Font' (not plain Fira Code)"
   hint "Cursor: Settings → Terminal › Integrated: Font Family"
@@ -61,7 +60,7 @@ case "$(uname -s)" in
   if fc-list 2>/dev/null | grep -qi 'FiraCode Nerd Font'; then
     pass "FiraCode Nerd Font registered with fontconfig"
   else
-    fail "FiraCode Nerd Font not found — run: install-nerd-font"
+    fail "FiraCode Nerd Font not found — run: ./install"
   fi
   ;;
   MINGW*|MSYS*|CYGWIN*)
